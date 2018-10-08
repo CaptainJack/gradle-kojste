@@ -56,7 +56,7 @@ class KtjsTestPlugin : Plugin<Project> {
 		project.task<Copy>(TASK_COPY_DEPENDENCIES) {
 			into(dependenciesDir)
 			project.configurations["testRuntimeClasspath"].forEach {
-				from(project.zipTree(it).matching { include("*.js") })
+				from(project.zipTree(it).matching { include("*.js", "*.js.map") })
 			}
 		}
 		
@@ -81,10 +81,12 @@ class KtjsTestPlugin : Plugin<Project> {
 				
 				val properties = mutableMapOf(
 					"basePath" to dependenciesDir.absolutePath,
-					"files" to listOf("kotlin.js", "*.js") + outFiles.map { it.absolutePath },
+					"files" to listOf("kotlin.js", "kotlin.js.map", "*.js", "*.js.map") + outFiles.map { it.absolutePath } + outFiles.map { it.absolutePath + ".map" },
 					"browsers" to ext.karmaBrowsers.map { it.pluginName },
 					"frameworks" to ext.karmaFrameworks.map { it.pluginName },
-					"reporters" to ext.karmaReporters.map { it.pluginName }.plus("progress")
+					"reporters" to ext.karmaReporters.map { it.pluginName }.plus("progress"),
+					"single-run" to true,
+					"no-auto-watch" to true
 				)
 				properties.putAll(ext.karmaProperties)
 				
@@ -117,7 +119,7 @@ class KtjsTestPlugin : Plugin<Project> {
 			dependsOn(TASK_CREATE_KARMA_CONFIG, TASK_INSTALL_NPM_DEPENDENCIES)
 			
 			setScript(nodeModulesDir.resolve("karma/bin/karma"))
-			setArgs(listOf("start", karmaFile.absolutePath, "--single-run", "--no-auto-watch"))
+			setArgs(listOf("start", karmaFile.absolutePath))
 			
 		}
 		
