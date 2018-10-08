@@ -56,7 +56,12 @@ class KtjsTestPlugin : Plugin<Project> {
 		project.task<Copy>(TASK_COPY_DEPENDENCIES) {
 			into(dependenciesDir)
 			project.configurations["testRuntimeClasspath"].forEach {
-				from(project.zipTree(it).matching { include("*.js", "*.js.map") })
+				from(project.zipTree(it).matching {
+					include("*.js")
+					if (ext.includeSourceMaps) {
+						include("*.js.map")
+					}
+				})
 			}
 		}
 		
@@ -68,6 +73,7 @@ class KtjsTestPlugin : Plugin<Project> {
 			inputs.property(
 				"karma",
 				listOf<String>()
+					.plus("includeSourceMaps:" + ext.includeSourceMaps)
 					.plus(ext.karmaFrameworks.map(KarmaPlugin::pluginName))
 					.plus(ext.karmaBrowsers.map(KarmaPlugin::pluginName))
 					.plus(ext.karmaReporters.map(KarmaPlugin::pluginName))
@@ -79,14 +85,23 @@ class KtjsTestPlugin : Plugin<Project> {
 			doLast {
 				val outFiles = project.tasks.withType<Kotlin2JsCompile>().map { it.outputFile }
 				
+				val files = mutableListOf("kotlin.js", "*.js")
+				files.addAll(outFiles.map { it.absolutePath })
+				
+				if (ext.includeSourceMaps) {
+					files.add("*.js.map")
+					files.add("kotlin.js.map")
+					files.addAll(outFiles.map { it.absolutePath + ".map" })
+				}
+				
 				val properties = mutableMapOf(
 					"basePath" to dependenciesDir.absolutePath,
-					"files" to listOf("kotlin.js", "kotlin.js.map", "*.js", "*.js.map") + outFiles.map { it.absolutePath } + outFiles.map { it.absolutePath + ".map" },
+					"files" to files,
 					"browsers" to ext.karmaBrowsers.map { it.pluginName },
 					"frameworks" to ext.karmaFrameworks.map { it.pluginName },
 					"reporters" to ext.karmaReporters.map { it.pluginName }.plus("progress"),
-					"single-run" to true,
-					"no-auto-watch" to true
+					"singleRun" to true,
+					"autoWatch" to false
 				)
 				properties.putAll(ext.karmaProperties)
 				

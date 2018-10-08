@@ -5,6 +5,7 @@ import ru.capjack.gradle.ktjs.test.karma.KarmaFramework
 import ru.capjack.gradle.ktjs.test.karma.KarmaReporter
 
 internal open class KtjsTestExtensionImpl : KtjsTestExtension {
+	override var includeSourceMaps: Boolean = false
 	
 	override var nodeDependencies = emptyList<NpmPackage>()
 	

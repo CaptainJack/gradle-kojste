@@ -5,6 +5,8 @@ import ru.capjack.gradle.ktjs.test.karma.KarmaFramework
 import ru.capjack.gradle.ktjs.test.karma.KarmaReporter
 
 interface KtjsTestExtension {
+	var includeSourceMaps: Boolean
+	
 	var nodeDependencies: List<NpmPackage>
 	
 	var karmaFrameworks: List<KarmaFramework>
