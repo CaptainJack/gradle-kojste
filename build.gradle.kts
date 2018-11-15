@@ -8,7 +8,6 @@ plugins {
 	id("com.gradle.plugin-publish") version "0.10.0"
 	id("nebula.release") version "8.0.3"
 	id("io.freefair.sources-jar") version "2.7.3"
-	id("ru.capjack.capjack-bintray") version "0.8.0"
 }
 
 group = "ru.capjack.gradle"
