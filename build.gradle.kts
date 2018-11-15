@@ -11,7 +11,7 @@ plugins {
 	id("ru.capjack.capjack-bintray") version "0.8.0"
 }
 
-group = "ru.capjack.gradle.capjack"
+group = "ru.capjack.gradle"
 
 repositories {
 	jcenter()
