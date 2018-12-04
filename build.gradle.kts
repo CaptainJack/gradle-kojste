@@ -6,7 +6,7 @@ plugins {
 	`java-gradle-plugin`
 	`maven-publish`
 	id("com.gradle.plugin-publish") version "0.10.0"
-	id("nebula.release") version "8.0.3"
+	id("nebula.release") version "9.0.0"
 	id("io.freefair.sources-jar") version "2.7.3"
 }
 
