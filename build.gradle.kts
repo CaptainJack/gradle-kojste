@@ -1,13 +1,9 @@
-import com.gradle.publish.MavenCoordinates
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
 	`kotlin-dsl`
 	`java-gradle-plugin`
 	`maven-publish`
 	id("com.gradle.plugin-publish") version "0.10.0"
-	id("nebula.release") version "9.0.0"
-	id("io.freefair.sources-jar") version "2.7.3"
+	id("nebula.release") version "9.1.1"
 }
 
 group = "ru.capjack.gradle"
