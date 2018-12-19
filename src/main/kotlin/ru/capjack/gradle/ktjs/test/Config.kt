@@ -2,16 +2,18 @@ package ru.capjack.gradle.ktjs.test
 
 object Config {
 	const val EXTENSION = "ktjsTest"
-	const val BUILD_DIR = "test-js"
+	
+	const val NODE_DIR = "test-js-node"
+	const val WORK_DIR = "test-js"
 	
 	const val TASK_RUN = "ktjsTestRun"
 	const val TASK_COPY_DEPENDENCIES = "ktjsTestCopyDependencies"
-	const val TASK_CREATE_KARMA_CONFIG = "ktjsTestInitKarmaConfig"
-	const val TASK_INSTALL_NPM_DEPENDENCIES = "ktjsTestInitNpmDependencies"
+	const val TASK_INIT_KARMA = "ktjsTestInitKarma"
+	const val TASK_INIT_NPM = "ktjsTestInitNpm"
+//
+	const val NODE_VERSION = "10.14.1"
 	
-	const val VERSION_NODE = "8.11.4"
-	
-	val NPM_KARMA = NpmPackage("karma", "3.0.0")
+	val NPM_KARMA = NpmPackage("karma", "3.1.3")
 	
 	val NPM_KARMA_CHROME_LAUNCHER = NpmPackage("karma-chrome-launcher", "2.2.0")
 	val NPM_KARMA_PHANTOMJS_LAUNCHER = NpmPackage("karma-phantomjs-launcher", "1.0.4")
