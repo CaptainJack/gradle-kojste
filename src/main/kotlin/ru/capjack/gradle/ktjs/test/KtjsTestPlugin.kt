@@ -72,7 +72,7 @@ class KtjsTestPlugin : Plugin<Project> {
 	}
 	
 	private fun createTaskInitNpm(project: Project) {
-		val ext = project.ktjsTestExtentions
+		val ext = project.ktjsTestExtensions
 		
 		project.task<NpmTask>(TASK_INIT_NPM) {
 			val dependencies = listOf(NPM_KARMA)
@@ -118,7 +118,7 @@ class KtjsTestPlugin : Plugin<Project> {
 					
 					from(zipTree(file).matching {
 						include("*.js")
-						if (ktjsTestExtentions.includeSourceMaps) {
+						if (ktjsTestExtensions.includeSourceMaps) {
 							include("*.js.map")
 						}
 					})
@@ -130,12 +130,12 @@ class KtjsTestPlugin : Plugin<Project> {
 	}
 	
 	private fun createTargetTaskInitKarma(settings: TargetSettings) {
-		settings.project.task(settings.initKarmaTaskName) {
+		settings.project.tasks.create(settings.initKarmaTaskName) {
 			project.afterEvaluate {
 				dependsOn(settings.copyDependenciesTaskName)
 				
 				
-				val ext = ktjsTestExtentions
+				val ext = ktjsTestExtensions
 				val outFiles = files(
 					tasks.getByName<Kotlin2JsCompile>(settings.compilationMain.compileKotlinTaskName).outputFile,
 					tasks.getByName<Kotlin2JsCompile>(settings.compilationTest.compileKotlinTaskName).outputFile
@@ -173,7 +173,8 @@ class KtjsTestPlugin : Plugin<Project> {
 						"reporters" to ext.karmaReporters.map { it.pluginName }.plus("progress"),
 						"singleRun" to true,
 						"autoWatch" to false,
-						"failOnEmptyTestSuite" to false
+						"failOnEmptyTestSuite" to false,
+						"colors" to false
 					)
 					properties.putAll(ext.karmaProperties)
 					
@@ -199,13 +200,13 @@ class KtjsTestPlugin : Plugin<Project> {
 	private val Project.ktjsTestNodeDir: File
 		get() = rootProject.buildDir.resolve(NODE_DIR)
 	
-	private val Project.ktjsTestExtentions: KtjsTestExtension
+	private val Project.ktjsTestExtensions: KtjsTestExtension
 		get() = project.extensions.getByName<KtjsTestExtension>(EXTENSION)
 	
 	internal class TargetSettings(
 		val project: Project,
-		val compilationMain: KotlinCompilation,
-		val compilationTest: KotlinCompilationToRunnableFiles,
+		val compilationMain: KotlinCompilation<*>,
+		val compilationTest: KotlinCompilationToRunnableFiles<*>,
 		val copyDependenciesTaskName: String,
 		val initKarmaTaskName: String,
 		val runTaskName: String,
@@ -215,7 +216,7 @@ class KtjsTestPlugin : Plugin<Project> {
 	) {
 		
 		companion object {
-			fun factory(project: Project, compilationMain: KotlinCompilation, compilationTest: KotlinCompilationToRunnableFiles): TargetSettings {
+			fun factory(project: Project, compilationMain: KotlinCompilation<*>, compilationTest: KotlinCompilationToRunnableFiles<*>): TargetSettings {
 				val name = compilationMain.target.name
 				val single = name == "2Js"
 				
