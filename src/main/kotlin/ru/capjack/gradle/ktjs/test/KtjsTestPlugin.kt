@@ -170,11 +170,7 @@ class KtjsTestPlugin : Plugin<Project> {
 						"files" to files,
 						"browsers" to ext.karmaBrowsers.map { it.pluginName },
 						"frameworks" to ext.karmaFrameworks.map { it.pluginName },
-						"reporters" to ext.karmaReporters.map { it.pluginName }.plus("progress"),
-						"singleRun" to true,
-						"autoWatch" to false,
-						"failOnEmptyTestSuite" to false,
-						"colors" to false
+						"reporters" to ext.karmaReporters.map { it.pluginName }.plus("progress")
 					)
 					properties.putAll(ext.karmaProperties)
 					
@@ -191,7 +187,14 @@ class KtjsTestPlugin : Plugin<Project> {
 			dependsOn(TASK_INIT_NPM, settings.initKarmaTaskName, settings.copyDependenciesTaskName)
 			
 			setScript(project.ktjsTestNodeDir.resolve("node_modules/karma/bin/karma"))
-			setArgs(listOf("start", settings.karmaFile.absolutePath))
+			
+			val args = mutableListOf("start", settings.karmaFile.absolutePath)
+			
+			if (project.ktjsTestExtensions.karmaProperties["colors"] == false) {
+				args.add("--no-color")
+			}
+			
+			setArgs(args)
 		}
 		
 		settings.project.tasks[settings.testTaskName].dependsOn(settings.runTaskName)

@@ -13,7 +13,12 @@ internal open class KtjsTestExtensionImpl : KtjsTestExtension {
 	override var karmaBrowsers = listOf(KarmaBrowser.PHANTOMJS)
 	override var karmaReporters = listOf<KarmaReporter>()
 	
-	override var karmaProperties =  mutableMapOf<String, Any>()
+	override var karmaProperties = mutableMapOf<String, Any>(
+		"singleRun" to true,
+		"autoWatch" to false,
+		"failOnEmptyTestSuite" to false,
+		"colors" to false
+	)
 	
 	override fun nodeDependencies(vararg values: NpmPackage) {
 		nodeDependencies = values.toList()
