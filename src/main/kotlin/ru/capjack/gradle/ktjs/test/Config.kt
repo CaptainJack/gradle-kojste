@@ -30,6 +30,7 @@ object Config {
 	val NPM_KARMA_QUNIT = NpmPackage("karma-qunit", "2.1.0")
 	val NPM_QUNIT = NpmPackage("qunit", "2.8.0")
 	
+	val NPM_KARMA_MOCHA_REPORTER = NpmPackage("karma-mocha-reporter", "2.2.5")
 	val NPM_KARMA_GROWL_REPORTER = NpmPackage("karma-growl-reporter", "1.0.0")
 	val NPM_KARMA_JUNIT_REPORTER = NpmPackage("karma-junit-reporter", "1.2.0")
 	val NPM_KARMA_TEAMCITY_REPORTER = NpmPackage("karma-teamcity-reporter", "1.1.0")

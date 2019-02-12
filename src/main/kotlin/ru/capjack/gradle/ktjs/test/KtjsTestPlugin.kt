@@ -8,6 +8,7 @@ import groovy.json.JsonBuilder
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Copy
+import org.gradle.api.tasks.TaskExecutionException
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.closureOf
 import org.gradle.kotlin.dsl.configure
@@ -34,7 +35,6 @@ import ru.capjack.gradle.ktjs.test.Config.TASK_INIT_KARMA
 import ru.capjack.gradle.ktjs.test.Config.TASK_INIT_NPM
 import ru.capjack.gradle.ktjs.test.Config.TASK_RUN
 import ru.capjack.gradle.ktjs.test.Config.WORK_DIR
-import ru.capjack.gradle.ktjs.test.karma.KarmaPlugin
 import java.io.File
 import java.io.OutputStream
 
@@ -76,9 +76,9 @@ class KtjsTestPlugin : Plugin<Project> {
 		
 		project.task<NpmTask>(TASK_INIT_NPM) {
 			val dependencies = listOf(NPM_KARMA)
-				.plus(ext.karmaFrameworks.flatMap(KarmaPlugin::pluginDependencies))
-				.plus(ext.karmaBrowsers.flatMap(KarmaPlugin::pluginDependencies))
-				.plus(ext.karmaReporters.flatMap(KarmaPlugin::pluginDependencies))
+				.plus(ext.karmaFrameworks.flatMap(KarmaPlugin::dependencies))
+				.plus(ext.karmaBrowsers.flatMap(KarmaPlugin::dependencies))
+				.plus(ext.karmaReporters.flatMap(KarmaPlugin::dependencies))
 				.plus(ext.nodeDependencies)
 			
 			inputs.property("dependencies", dependencies.joinToString())
@@ -146,9 +146,9 @@ class KtjsTestPlugin : Plugin<Project> {
 					"karma",
 					listOf<String>()
 						.plus("includeSourceMaps:" + ext.includeSourceMaps)
-						.plus(ext.karmaFrameworks.map(KarmaPlugin::pluginName))
-						.plus(ext.karmaBrowsers.map(KarmaPlugin::pluginName))
-						.plus(ext.karmaReporters.map(KarmaPlugin::pluginName))
+						.plus(ext.karmaFrameworks.map(KarmaPlugin::name))
+						.plus(ext.karmaBrowsers.map(KarmaPlugin::name))
+						.plus(ext.karmaReporters.map(KarmaPlugin::name))
 						.joinToString()
 						.plus(ext.karmaProperties.map { "${it.key}:${it.value}" }.joinToString())
 				)
@@ -168,9 +168,9 @@ class KtjsTestPlugin : Plugin<Project> {
 					val properties = mutableMapOf(
 						"basePath" to settings.dependenciesDir.absolutePath,
 						"files" to files,
-						"browsers" to ext.karmaBrowsers.map { it.pluginName },
-						"frameworks" to ext.karmaFrameworks.map { it.pluginName },
-						"reporters" to ext.karmaReporters.map { it.pluginName }.plus("progress")
+						"browsers" to ext.karmaBrowsers.map { it.name },
+						"frameworks" to ext.karmaFrameworks.map { it.name },
+						"reporters" to ext.karmaReporters.map { it.name }
 					)
 					properties.putAll(ext.karmaProperties)
 					
@@ -187,14 +187,15 @@ class KtjsTestPlugin : Plugin<Project> {
 			dependsOn(TASK_INIT_NPM, settings.initKarmaTaskName, settings.copyDependenciesTaskName)
 			
 			setScript(project.ktjsTestNodeDir.resolve("node_modules/karma/bin/karma"))
+			setArgs(listOf("start", settings.karmaFile.absolutePath))
 			
-			val args = mutableListOf("start", settings.karmaFile.absolutePath)
+			setIgnoreExitValue(true)
 			
-			if (project.ktjsTestExtensions.karmaProperties["colors"] == false) {
-				args.add("--no-color")
+			doLast {
+				if (result.exitValue != 0) {
+					throw TaskExecutionException(this, Exception("Kotlin JS tests fail"))
+				}
 			}
-			
-			setArgs(args)
 		}
 		
 		settings.project.tasks[settings.testTaskName].dependsOn(settings.runTaskName)

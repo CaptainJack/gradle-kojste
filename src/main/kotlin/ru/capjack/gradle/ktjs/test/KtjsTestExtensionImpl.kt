@@ -1,38 +1,35 @@
 package ru.capjack.gradle.ktjs.test
 
-import ru.capjack.gradle.ktjs.test.karma.KarmaBrowser
-import ru.capjack.gradle.ktjs.test.karma.KarmaFramework
-import ru.capjack.gradle.ktjs.test.karma.KarmaReporter
-
 internal open class KtjsTestExtensionImpl : KtjsTestExtension {
 	override var includeSourceMaps: Boolean = false
 	
-	override var nodeDependencies = emptyList<NpmPackage>()
+	override var nodeDependencies = mutableListOf<NpmPackage>()
 	
-	override var karmaFrameworks = listOf(KarmaFramework.MOCHA)
-	override var karmaBrowsers = listOf(KarmaBrowser.PHANTOMJS)
-	override var karmaReporters = listOf<KarmaReporter>()
+	override var karmaFrameworks = mutableListOf(KarmaFrameworks.MOCHA)
+	override var karmaBrowsers = mutableListOf(KarmaBrowsers.PHANTOMJS)
+	override var karmaReporters = mutableListOf(KarmaReporters.MOCHA)
 	
 	override var karmaProperties = mutableMapOf<String, Any>(
 		"singleRun" to true,
 		"autoWatch" to false,
 		"failOnEmptyTestSuite" to false,
-		"colors" to false
+		"colors" to false,
+		"mochaReporter" to mapOf("output" to "minimal")
 	)
 	
 	override fun nodeDependencies(vararg values: NpmPackage) {
-		nodeDependencies = values.toList()
+		nodeDependencies = values.toMutableList()
 	}
 	
-	override fun karmaFrameworks(vararg values: KarmaFramework) {
-		karmaFrameworks = values.toList()
+	override fun karmaFrameworks(vararg values: KarmaPlugin) {
+		karmaFrameworks = values.toMutableList()
 	}
 	
-	override fun karmaBrowsers(vararg values: KarmaBrowser) {
-		karmaBrowsers = values.toList()
+	override fun karmaBrowsers(vararg values: KarmaPlugin) {
+		karmaBrowsers = values.toMutableList()
 	}
 	
-	override fun karmaReporters(vararg values: KarmaReporter) {
-		karmaReporters = values.toList()
+	override fun karmaReporters(vararg values: KarmaPlugin) {
+		karmaReporters = values.toMutableList()
 	}
 }
