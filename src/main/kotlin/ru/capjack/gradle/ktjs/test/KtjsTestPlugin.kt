@@ -118,6 +118,7 @@ class KtjsTestPlugin : Plugin<Project> {
 					
 					from(zipTree(file).matching {
 						include("*.js")
+						exclude("*.meta.js")
 						if (ktjsTestExtensions.includeSourceMaps) {
 							include("*.js.map")
 						}
@@ -156,12 +157,12 @@ class KtjsTestPlugin : Plugin<Project> {
 				
 				doLast {
 					
-					val files = mutableListOf("kotlin.js", "*.js")
+					val files = LinkedHashSet<String>()
+					files.add("kotlin.js")
+					files.addAll(settings.dependenciesDir.listFiles().map { it.name })
 					files.addAll(outFiles.map { it.absolutePath })
 					
 					if (ext.includeSourceMaps) {
-						files.add("*.js.map")
-						files.add("kotlin.js.map")
 						files.addAll(outFiles.map { it.absolutePath + ".map" })
 					}
 					
