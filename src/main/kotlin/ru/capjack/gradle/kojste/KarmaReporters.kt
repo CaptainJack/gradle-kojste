@@ -1,10 +1,10 @@
-package ru.capjack.gradle.ktjs.test
+package ru.capjack.gradle.kojste
 
-import ru.capjack.gradle.ktjs.test.Config.NPM_KARMA_COVERAGE
-import ru.capjack.gradle.ktjs.test.Config.NPM_KARMA_GROWL_REPORTER
-import ru.capjack.gradle.ktjs.test.Config.NPM_KARMA_JUNIT_REPORTER
-import ru.capjack.gradle.ktjs.test.Config.NPM_KARMA_MOCHA_REPORTER
-import ru.capjack.gradle.ktjs.test.Config.NPM_KARMA_TEAMCITY_REPORTER
+import ru.capjack.gradle.kojste.Config.NPM_KARMA_COVERAGE
+import ru.capjack.gradle.kojste.Config.NPM_KARMA_GROWL_REPORTER
+import ru.capjack.gradle.kojste.Config.NPM_KARMA_JUNIT_REPORTER
+import ru.capjack.gradle.kojste.Config.NPM_KARMA_MOCHA_REPORTER
+import ru.capjack.gradle.kojste.Config.NPM_KARMA_TEAMCITY_REPORTER
 
 object KarmaReporters {
 	val PROGRESS = KarmaPlugin("progress")

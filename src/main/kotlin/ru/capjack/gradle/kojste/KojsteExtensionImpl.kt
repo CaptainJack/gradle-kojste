@@ -1,6 +1,6 @@
-package ru.capjack.gradle.ktjs.test
+package ru.capjack.gradle.kojste
 
-internal open class KtjsTestExtensionImpl : KtjsTestExtension {
+internal open class KojsteExtensionImpl : KojsteExtension {
 	override var includeSourceMaps: Boolean = false
 	
 	override var nodeDependencies = mutableListOf<NpmPackage>()

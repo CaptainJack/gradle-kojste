@@ -1,6 +1,6 @@
-package ru.capjack.gradle.ktjs.test
+package ru.capjack.gradle.kojste
 
-interface KtjsTestExtension {
+interface KojsteExtension {
 	var includeSourceMaps: Boolean
 	
 	var nodeDependencies: MutableList<NpmPackage>

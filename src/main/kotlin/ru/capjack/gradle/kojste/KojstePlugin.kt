@@ -1,4 +1,4 @@
-package ru.capjack.gradle.ktjs.test
+package ru.capjack.gradle.kojste
 
 import com.moowork.gradle.node.NodeExtension
 import com.moowork.gradle.node.NodePlugin
@@ -26,23 +26,23 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinCompilationToRunnableFiles
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
-import ru.capjack.gradle.ktjs.test.Config.EXTENSION
-import ru.capjack.gradle.ktjs.test.Config.NODE_DIR
-import ru.capjack.gradle.ktjs.test.Config.NODE_VERSION
-import ru.capjack.gradle.ktjs.test.Config.NPM_KARMA
-import ru.capjack.gradle.ktjs.test.Config.TASK_COPY_DEPENDENCIES
-import ru.capjack.gradle.ktjs.test.Config.TASK_INIT_KARMA
-import ru.capjack.gradle.ktjs.test.Config.TASK_INIT_NPM
-import ru.capjack.gradle.ktjs.test.Config.TASK_RUN
-import ru.capjack.gradle.ktjs.test.Config.WORK_DIR
+import ru.capjack.gradle.kojste.Config.EXTENSION
+import ru.capjack.gradle.kojste.Config.NODE_DIR
+import ru.capjack.gradle.kojste.Config.NODE_VERSION
+import ru.capjack.gradle.kojste.Config.NPM_KARMA
+import ru.capjack.gradle.kojste.Config.TASK_COPY_DEPENDENCIES
+import ru.capjack.gradle.kojste.Config.TASK_INIT_KARMA
+import ru.capjack.gradle.kojste.Config.TASK_INIT_NPM
+import ru.capjack.gradle.kojste.Config.TASK_RUN
+import ru.capjack.gradle.kojste.Config.WORK_DIR
 import java.io.File
 import java.io.OutputStream
 
-class KtjsTestPlugin : Plugin<Project> {
+class KojstePlugin : Plugin<Project> {
 	override fun apply(project: Project) {
 		configureNode(project)
 		
-		project.extensions.create(KtjsTestExtension::class, EXTENSION, KtjsTestExtensionImpl::class)
+		project.extensions.create(KojsteExtension::class, EXTENSION, KojsteExtensionImpl::class)
 		
 		project.afterEvaluate {
 			createTaskInitNpm(this)
@@ -61,7 +61,7 @@ class KtjsTestPlugin : Plugin<Project> {
 	private fun configureNode(project: Project) {
 		project.pluginManager.apply(NodePlugin::class)
 		
-		val dir = project.ktjsTestNodeDir
+		val dir = project.kojsteNodeDir
 		
 		project.configure<NodeExtension> {
 			download = true
@@ -72,7 +72,7 @@ class KtjsTestPlugin : Plugin<Project> {
 	}
 	
 	private fun createTaskInitNpm(project: Project) {
-		val ext = project.ktjsTestExtensions
+		val ext = project.kojsteExtensions
 		
 		project.task<NpmTask>(TASK_INIT_NPM) {
 			val dependencies = listOf(NPM_KARMA)
@@ -82,7 +82,7 @@ class KtjsTestPlugin : Plugin<Project> {
 				.plus(ext.nodeDependencies)
 			
 			inputs.property("dependencies", dependencies.joinToString())
-			outputs.file(project.ktjsTestNodeDir.resolve("package-lock.json"))
+			outputs.file(project.kojsteNodeDir.resolve("package-lock.json"))
 			
 			setArgs(listOf("install", "--silent") + dependencies.map { it.toString() })
 			
@@ -119,7 +119,7 @@ class KtjsTestPlugin : Plugin<Project> {
 					from(zipTree(file).matching {
 						include("*.js")
 						exclude("*.meta.js")
-						if (ktjsTestExtensions.includeSourceMaps) {
+						if (kojsteExtensions.includeSourceMaps) {
 							include("*.js.map")
 						}
 					})
@@ -136,7 +136,7 @@ class KtjsTestPlugin : Plugin<Project> {
 				dependsOn(settings.copyDependenciesTaskName)
 				
 				
-				val ext = ktjsTestExtensions
+				val ext = kojsteExtensions
 				val outFiles = files(
 					tasks.getByName<Kotlin2JsCompile>(settings.compilationMain.compileKotlinTaskName).outputFile,
 					tasks.getByName<Kotlin2JsCompile>(settings.compilationTest.compileKotlinTaskName).outputFile
@@ -187,7 +187,7 @@ class KtjsTestPlugin : Plugin<Project> {
 		settings.project.task<NodeTask>(settings.runTaskName) {
 			dependsOn(TASK_INIT_NPM, settings.initKarmaTaskName, settings.copyDependenciesTaskName)
 			
-			setScript(project.ktjsTestNodeDir.resolve("node_modules/karma/bin/karma"))
+			setScript(project.kojsteNodeDir.resolve("node_modules/karma/bin/karma"))
 			setArgs(listOf("start", settings.karmaFile.absolutePath))
 			
 			setIgnoreExitValue(true)
@@ -202,11 +202,11 @@ class KtjsTestPlugin : Plugin<Project> {
 		settings.project.tasks[settings.testTaskName].dependsOn(settings.runTaskName)
 	}
 	
-	private val Project.ktjsTestNodeDir: File
+	private val Project.kojsteNodeDir: File
 		get() = rootProject.buildDir.resolve(NODE_DIR)
 	
-	private val Project.ktjsTestExtensions: KtjsTestExtension
-		get() = project.extensions.getByName<KtjsTestExtension>(EXTENSION)
+	private val Project.kojsteExtensions: KojsteExtension
+		get() = project.extensions.getByName<KojsteExtension>(EXTENSION)
 	
 	internal class TargetSettings(
 		val project: Project,

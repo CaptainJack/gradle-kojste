@@ -1,16 +1,16 @@
-package ru.capjack.gradle.ktjs.test
+package ru.capjack.gradle.kojste
 
 object Config {
-	const val EXTENSION = "ktjsTest"
+	const val EXTENSION = "kojste"
 	
-	const val NODE_DIR = "test-js-node"
-	const val WORK_DIR = "test-js"
+	const val NODE_DIR = "kojste-node"
+	const val WORK_DIR = "kojste"
 	
-	const val TASK_RUN = "ktjsTestRun"
-	const val TASK_COPY_DEPENDENCIES = "ktjsTestCopyDependencies"
-	const val TASK_INIT_KARMA = "ktjsTestInitKarma"
-	const val TASK_INIT_NPM = "ktjsTestInitNpm"
-//
+	const val TASK_RUN = "kojsteRun"
+	const val TASK_COPY_DEPENDENCIES = "kojsteCopyDependencies"
+	const val TASK_INIT_KARMA = "kojsteInitKarma"
+	const val TASK_INIT_NPM = "kojsteInitNpm"
+
 	const val NODE_VERSION = "10.15.0"
 	
 	val NPM_KARMA = NpmPackage("karma", "3.1.4")

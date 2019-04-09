@@ -1,1 +1,1 @@
-rootProject.name = "gradle-ktjs-test"
+rootProject.name = "gradle-kojste"

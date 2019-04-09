@@ -1,4 +1,4 @@
-package ru.capjack.gradle.ktjs.test
+package ru.capjack.gradle.kojste
 
 import org.jetbrains.kotlin.gradle.dsl.KotlinSingleJavaTargetExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget

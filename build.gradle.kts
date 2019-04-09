@@ -2,8 +2,8 @@ plugins {
 	`kotlin-dsl`
 	`java-gradle-plugin`
 	`maven-publish`
-	id("com.gradle.plugin-publish") version "0.10.0"
-	id("nebula.release") version "9.2.0"
+	id("com.gradle.plugin-publish") version "0.10.1"
+	id("nebula.release") version "10.0.1"
 }
 
 group = "ru.capjack.gradle"
@@ -19,15 +19,15 @@ dependencies {
 }
 
 gradlePlugin {
-	plugins.create("KtjsTest") {
-		id = "ru.capjack.ktjs-test"
-		implementationClass = "ru.capjack.gradle.ktjs.test.KtjsTestPlugin"
-		displayName = "KtjsTest"
+	plugins.create("Kojste") {
+		id = "ru.capjack.kojste"
+		implementationClass = "ru.capjack.gradle.kojste.KojstePlugin"
+		displayName = "Kojste"
 	}
 }
 
 pluginBundle {
-	vcsUrl = "https://github.com/CaptainJack/gradle-ktjs-test"
+	vcsUrl = "https://github.com/CaptainJack/gradle-ktjste"
 	website = vcsUrl
 	description = "Provides test runtime for Kotlin JavaScript on Node.js and Karma"
 	tags = listOf("kotlin", "javascript", "test")

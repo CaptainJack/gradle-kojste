@@ -1,4 +1,4 @@
-package ru.capjack.gradle.ktjs.test
+package ru.capjack.gradle.kojste
 
 data class NpmPackage(
 	val name: String,
